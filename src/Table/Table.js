@@ -143,21 +143,28 @@ class Table extends Component {
     allRowsSelected: false,
   };
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+
+    this.tableDiv = React.createRef();
+    this.tableBody = React.createRef();
+  }
+
+  UNSAFE_componentWillMount() {
     if (this.props.allRowsSelected) {
       this.setState({allRowsSelected: true});
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.allRowsSelected !== nextProps.allRowsSelected) {
       this.setState({allRowsSelected: nextProps.allRowsSelected});
     }
   }
 
   isScrollbarVisible() {
-    const tableDivHeight = this.refs.tableDiv.clientHeight;
-    const tableBodyHeight = this.refs.tableBody.clientHeight;
+    const tableDivHeight = this.tableDiv.clientHeight.current;
+    const tableBodyHeight = this.tableBody.clientHeight.current;
 
     return tableBodyHeight > tableDivHeight;
   }
@@ -311,8 +318,8 @@ class Table extends Component {
     return (
       <div style={prepareStyles(Object.assign(styles.tableWrapper, wrapperStyle))}>
         {headerTable}
-        <div style={prepareStyles(Object.assign(styles.bodyTable, bodyStyle))} ref="tableDiv">
-          <table className={className} style={mergedTableStyle} ref="tableBody">
+        <div style={prepareStyles(Object.assign(styles.bodyTable, bodyStyle))} ref={this.tableDiv}>
+          <table className={className} style={mergedTableStyle} ref={this.tableBody}>
             {inlineHeader}
             {inlineFooter}
             {tBody}

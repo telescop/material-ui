@@ -256,7 +256,7 @@ class RaisedButton extends Component {
     zDepth: 0,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const zDepth = this.props.disabled ? 0 : 1;
     this.setState({
       zDepth: zDepth,
@@ -264,7 +264,7 @@ class RaisedButton extends Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const zDepth = nextProps.disabled ? 0 : 1;
     const nextState = {
       zDepth: zDepth,
@@ -429,7 +429,6 @@ class RaisedButton extends Component {
         <EnhancedButton
           {...other}
           {...buttonEventHandlers}
-          ref="container"
           disabled={disabled}
           style={Object.assign(styles.button, buttonStyle)}
           focusRippleColor={mergedRippleStyles.color}
@@ -438,7 +437,6 @@ class RaisedButton extends Component {
           touchRippleOpacity={mergedRippleStyles.opacity}
         >
           <div
-            ref="overlay"
             style={prepareStyles(Object.assign(styles.overlay, overlayStyle, overlayBackgroundProxy))}
           >
             {enhancedButtonChildren}

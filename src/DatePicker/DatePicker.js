@@ -172,13 +172,20 @@ class DatePicker extends Component {
     date: undefined,
   };
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+
+    this.dialogWindow = React.createRef();
+    this.input = React.createRef();
+  }
+
+  UNSAFE_componentWillMount() {
     this.setState({
       date: this.isControlled() ? this.getControlledDate() : this.props.defaultDate,
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.isControlled()) {
       const newDate = this.getControlledDate(nextProps);
       if (!isEqualDate(this.state.date, newDate)) {
@@ -205,11 +212,11 @@ class DatePicker extends Component {
     if (this.state.date !== undefined) {
       this.setState({
         dialogDate: this.getDate(),
-      }, this.refs.dialogWindow.show);
+      }, this.dialogWindow.current.show);
     } else {
       this.setState({
         dialogDate: new Date(),
-      }, this.refs.dialogWindow.show);
+      }, this.dialogWindow.current.show);
     }
   }
 
@@ -312,7 +319,7 @@ class DatePicker extends Component {
           {...other}
           onFocus={this.handleFocus}
           onClick={this.handleClick}
-          ref="input"
+          ref={this.input}
           style={textFieldStyle}
           value={this.state.date ? formatDate(this.state.date) : ''}
         />
@@ -333,7 +340,7 @@ class DatePicker extends Component {
           onAccept={this.handleAccept}
           onShow={onShow}
           onDismiss={onDismiss}
-          ref="dialogWindow"
+          ref={this.dialogWindow}
           shouldDisableDate={shouldDisableDate}
           hideCalendarDate={hideCalendarDate}
           openToYearSelection={openToYearSelection}

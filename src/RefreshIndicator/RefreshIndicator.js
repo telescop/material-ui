@@ -76,9 +76,16 @@ class RefreshIndicator extends Component {
     muiTheme: PropTypes.object.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.path = React.createRef();
+    this.wrapper = React.createRef();
+  }
+
   componentDidMount() {
-    this.scalePath(this.refs.path, 0);
-    this.rotateWrapper(this.refs.wrapper);
+    this.scalePath(this.path.current, 0);
+    this.rotateWrapper(this.wrapper.current);
   }
 
   componentDidUpdate() {
@@ -86,8 +93,8 @@ class RefreshIndicator extends Component {
     clearTimeout(this.rotateWrapperTimer);
     clearTimeout(this.rotateWrapperSecondTimer);
 
-    this.scalePath(this.refs.path, 0);
-    this.rotateWrapper(this.refs.wrapper);
+    this.scalePath(this.path.current, 0);
+    this.rotateWrapper(this.wrapper.current);
   }
 
   componentWillUnmount() {
@@ -105,7 +112,7 @@ class RefreshIndicator extends Component {
       const circleStyle = this.getCircleStyle(paperSize);
       childrenCmp = (
         <div
-          ref="wrapper"
+          ref={this.wrapper}
           style={prepareStyles({
             transition: transitions.create('transform', '20s', null, 'linear'),
             width: '100%',
@@ -120,7 +127,7 @@ class RefreshIndicator extends Component {
             viewBox={`0 0 ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}
           >
             <circle
-              ref="path"
+              ref={this.path}
               style={prepareStyles(Object.assign(circleStyle.style, {
                 transition: transitions.create('all', '1.5s', null, 'ease-in-out'),
               }))}

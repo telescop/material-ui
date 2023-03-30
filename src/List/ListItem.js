@@ -343,13 +343,13 @@ class ListItem extends Component {
     touch: false,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState({
       open: this.props.open === null ? this.props.initiallyOpen === true : this.props.open,
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // update the state when the component is controlled.
     if (nextProps.open !== null)
       this.setState({open: nextProps.open});

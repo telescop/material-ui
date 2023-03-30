@@ -105,12 +105,19 @@ class Tooltip extends Component {
     offsetWidth: null,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.tooltip = React.createRef();
+    this.ripple = React.createRef();
+  }
+
   componentDidMount() {
     this.setRippleSize();
     this.setTooltipPosition();
   }
 
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     this.setTooltipPosition();
   }
 
@@ -119,8 +126,8 @@ class Tooltip extends Component {
   }
 
   setRippleSize() {
-    const ripple = this.refs.ripple;
-    const tooltip = this.refs.tooltip;
+    const ripple = this.ripple.current;
+    const tooltip = this.tooltip.current;
     const tooltipWidth = parseInt(tooltip.offsetWidth, 10) /
       (this.props.horizontalPosition === 'center' ? 2 : 1);
     const tooltipHeight = parseInt(tooltip.offsetHeight, 10);
@@ -137,7 +144,7 @@ class Tooltip extends Component {
   }
 
   setTooltipPosition() {
-    this.setState({offsetWidth: this.refs.tooltip.offsetWidth});
+    this.setState({offsetWidth: this.tooltip.current.offsetWidth});
   }
 
   render() {
@@ -156,7 +163,7 @@ class Tooltip extends Component {
     return (
       <div
         {...other}
-        ref="tooltip"
+        ref={this.tooltip}
         style={prepareStyles(Object.assign(
           styles.root,
           this.props.show && styles.rootWhenShown,
@@ -165,7 +172,7 @@ class Tooltip extends Component {
         ))}
       >
         <div
-          ref="ripple"
+          ref={this.ripple}
           style={prepareStyles(Object.assign(
             styles.ripple,
             this.props.show && styles.rippleWhenShown

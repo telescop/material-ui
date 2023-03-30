@@ -195,7 +195,13 @@ class Toggle extends Component {
     switched: false,
   };
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+
+    this.enhancedSwitch = React.createRef();
+  }
+
+  UNSAFE_componentWillMount() {
     const {toggled, defaultToggled, valueLink} = this.props;
 
     if (toggled || defaultToggled || (valueLink && valueLink.value)) {
@@ -206,11 +212,11 @@ class Toggle extends Component {
   }
 
   isToggled() {
-    return this.refs.enhancedSwitch.isSwitched();
+    return this.enhancedSwitch.current.isSwitched();
   }
 
   setToggled(newToggledValue) {
-    this.refs.enhancedSwitch.setSwitched(newToggledValue);
+    this.enhancedSwitch.current.setSwitched(newToggledValue);
   }
 
   handleStateChange = (newSwitched) => {
@@ -247,7 +253,7 @@ class Toggle extends Component {
     );
 
     const enhancedSwitchProps = {
-      ref: 'enhancedSwitch',
+      ref: this.enhancedSwitch,
       inputType: 'checkbox',
       switchElement: toggleElement,
       rippleStyle: styles.ripple,

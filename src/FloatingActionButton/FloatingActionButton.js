@@ -157,7 +157,14 @@ class FloatingActionButton extends Component {
     zDepth: undefined,
   };
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+
+    this.overlay = React.createRef();
+    this.container = React.createRef();
+  }
+
+  UNSAFE_componentWillMount() {
     this.setState({
       zDepth: this.props.disabled ? 0 : this.props.zDepth,
     });
@@ -170,7 +177,7 @@ class FloatingActionButton extends Component {
       'icons to FloatingActionButtons.');
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const nextState = {};
 
     if (nextProps.disabled !== this.props.disabled) {
@@ -199,7 +206,7 @@ class FloatingActionButton extends Component {
   };
 
   handleMouseLeave = (event) => {
-    if (!this.refs.container.isKeyboardFocused()) {
+    if (!this.container.current.isKeyboardFocused()) {
       this.setState({zDepth: this.props.zDepth, hovered: false});
     }
     if (this.props.onMouseLeave) {
@@ -208,7 +215,7 @@ class FloatingActionButton extends Component {
   };
 
   handleMouseEnter = (event) => {
-    if (!this.refs.container.isKeyboardFocused() && !this.state.touch) {
+    if (!this.container.current.isKeyboardFocused() && !this.state.touch) {
       this.setState({hovered: true});
     }
     if (this.props.onMouseEnter) {
@@ -239,11 +246,11 @@ class FloatingActionButton extends Component {
   handleKeyboardFocus = (event, keyboardFocused) => {
     if (keyboardFocused && !this.props.disabled) {
       this.setState({zDepth: this.props.zDepth + 1});
-      this.refs.overlay.style.backgroundColor =
+      this.overlay.current.style.backgroundColor =
         fade(getStyles(this.props, this.context).icon.color, 0.4);
     } else if (!this.state.hovered) {
       this.setState({zDepth: this.props.zDepth});
-      this.refs.overlay.style.backgroundColor = 'transparent';
+      this.overlay.current.style.backgroundColor = 'transparent';
     }
   };
 
@@ -310,7 +317,7 @@ class FloatingActionButton extends Component {
         <EnhancedButton
           {...other}
           {...buttonEventHandlers}
-          ref="container"
+          ref={this.container}
           disabled={disabled}
           style={Object.assign(
             styles.container,
@@ -321,7 +328,7 @@ class FloatingActionButton extends Component {
           touchRippleColor={styles.icon.color}
         >
           <div
-            ref="overlay"
+            ref={this.overlay}
             style={prepareStyles(Object.assign(
               styles.overlay,
               (this.state.hovered && !this.props.disabled) && styles.overlayWhenHovered

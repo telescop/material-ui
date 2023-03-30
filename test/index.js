@@ -4,6 +4,10 @@ import Mocha from 'mocha';
 import Glob from 'glob';
 import './utils/dom';
 import consoleError from './utils/consoleError';
+import Enzyme from 'enzyme';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 consoleError();
 

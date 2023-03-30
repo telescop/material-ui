@@ -142,7 +142,7 @@ class Popover extends Component {
     this.placementTimeout = setTimeout(this.setPlacement);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.open === this.props.open) {
       return;
     }

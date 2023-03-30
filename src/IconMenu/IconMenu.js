@@ -156,11 +156,18 @@ class IconMenu extends Component {
     open: false,
   };
 
-  componentWillReceiveProps(nextProps) {
+  constructor(props) {
+    super(props);
+
+    this.iconMenuContainer = React.createRef();
+    this.iconButton = React.createRef();
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.open != null) {
       this.setState({
         open: nextProps.open,
-        anchorEl: this.refs.iconMenuContainer,
+        anchorEl: this.iconMenuContainer.current,
       });
     }
   }
@@ -184,7 +191,7 @@ class IconMenu extends Component {
       this.setState({open: false}, () => {
         // Set focus on the icon button when the menu close
         if (isKeyboard) {
-          const iconButton = this.refs.iconButton;
+          const iconButton = this.iconButton.current;
           ReactDOM.findDOMNode(iconButton).focus();
           iconButton.setKeyboardFocus();
         }
@@ -281,7 +288,7 @@ You should wrapped it with an <IconButton />.`);
           iconButtonElement.props.onClick(event);
         }
       },
-      ref: 'iconButton',
+      ref: this.iconButton,
     };
     if (iconStyle || iconButtonElement.props.iconStyle) {
       iconButtonProps.iconStyle = iconStyle ?
@@ -305,7 +312,7 @@ You should wrapped it with an <IconButton />.`);
 
     return (
       <div
-        ref="iconMenuContainer"
+        ref={this.iconMenuContainer}
         className={className}
         onMouseDown={onMouseDown}
         onMouseLeave={onMouseLeave}

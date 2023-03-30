@@ -52,6 +52,14 @@ class DatePickerDialog extends Component {
     open: false,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.root = React.createRef();
+    this.calendar = React.createRef();
+    this.dialog = React.createRef();
+  }
+
   show = () => {
     if (this.props.onShow && !this.state.open) {
       this.props.onShow();
@@ -87,8 +95,8 @@ class DatePickerDialog extends Component {
   };
 
   handleClickOk = () => {
-    if (this.props.onAccept && !this.refs.calendar.isSelectedDateDisabled()) {
-      this.props.onAccept(this.refs.calendar.getSelectedDate());
+    if (this.props.onAccept && !this.calendar.current.isSelectedDateDisabled()) {
+      this.props.onAccept(this.calendar.current.getSelectedDate());
     }
 
     this.setState({
@@ -147,13 +155,13 @@ class DatePickerDialog extends Component {
     const Container = (container === 'inline' ? Popover : Dialog);
 
     return (
-      <div {...other} ref="root">
+      <div {...other} ref={this.root}>
         <Container
-          anchorEl={this.refs.root} // For Popover
+          anchorEl={this.root.current} // For Popover
           animation={animation || PopoverAnimationVertical} // For Popover
           bodyStyle={styles.dialogBodyContent}
           contentStyle={styles.dialogContent}
-          ref="dialog"
+          ref={this.dialog}
           repositionOnUpdate={true}
           open={open}
           onRequestClose={this.handleRequestClose}
@@ -176,7 +184,7 @@ class DatePickerDialog extends Component {
             minDate={minDate}
             mode={mode}
             open={open}
-            ref="calendar"
+            ref={this.calendar}
             onClickCancel={this.handleClickCancel}
             onClickOk={this.handleClickOk}
             okLabel={okLabel}

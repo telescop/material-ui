@@ -1,4 +1,4 @@
-import {jsdom} from 'jsdom';
+import {JSDOM} from 'jsdom';
 
 /**
  * Bootstrap the DOM environment in node
@@ -6,7 +6,8 @@ import {jsdom} from 'jsdom';
 
 const exposedProperties = ['window', 'navigator', 'document'];
 
-global.document = jsdom('');
+global.document = (new JSDOM('', {
+  url: "http://localhost"})).window.document;
 global.window = document.defaultView;
 
 Object.keys(document.defaultView).forEach((property) => {

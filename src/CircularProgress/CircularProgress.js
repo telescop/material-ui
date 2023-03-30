@@ -111,9 +111,16 @@ class CircularProgress extends Component {
     muiTheme: PropTypes.object.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.path = React.createRef();
+    this.wrapper = React.createRef();
+  }
+
   componentDidMount() {
-    this.scalePath(this.refs.path);
-    this.rotateWrapper(this.refs.wrapper);
+    this.scalePath(this.path.current);
+    this.rotateWrapper(this.wrapper.current);
   }
 
   componentWillUnmount() {
@@ -172,13 +179,13 @@ class CircularProgress extends Component {
 
     return (
       <div {...other} style={prepareStyles(Object.assign(styles.root, style))} >
-        <div ref="wrapper" style={prepareStyles(Object.assign(styles.wrapper, innerStyle))} >
+        <div ref={this.wrapper} style={prepareStyles(Object.assign(styles.wrapper, innerStyle))} >
           <svg
             viewBox={`0 0 ${size} ${size}`}
             style={prepareStyles(styles.svg)}
           >
             <circle
-              ref="path"
+              ref={this.path}
               style={prepareStyles(styles.path)}
               cx={size / 2}
               cy={size / 2}

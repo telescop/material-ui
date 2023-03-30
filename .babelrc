@@ -2,7 +2,20 @@
   "presets": ["./tools/material-ui-babel-preset-es2015", "stage-1", "react"],
   "plugins": [
     ["transform-replace-object-assign", "simple-assign"],
-    "transform-dev-warning"
+    "transform-dev-warning",
+    ["transform-rename-import", {
+      "replacements": [
+        { "original": "react-transition-group/TransitionGroup",
+          "replacement": "react-transition-group/lib/TransitionGroup" },
+        { "original": "recompose/compose",
+          "replacement": "recompose/lib/packages/recompose/compose" },
+        { "original": "recompose/pure",
+          "replacement": "recompose/lib/packages/recompose/pure" },
+        { "original": "recompose/shallowEqual",
+          "replacement": "recompose/lib/packages/recompose/shallowEqual" }
+      ]
+    }
+  ]
   ],
   "env": {
     "test": {
@@ -11,15 +24,13 @@
     "docs-production": {
       "plugins": [
         ["transform-replace-object-assign", "simple-assign"],
-        "transform-react-remove-prop-types",
         "transform-react-constant-elements",
         "transform-react-inline-elements"
       ]
     },
     "release": {
       "plugins": [
-        "transform-runtime",
-        ["transform-react-remove-prop-types", {"mode": "wrap"}]
+        "transform-runtime"
       ]
     }
   }

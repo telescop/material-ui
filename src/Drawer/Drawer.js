@@ -104,7 +104,14 @@ class Drawer extends Component {
     muiTheme: PropTypes.object.isRequired,
   };
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+
+    this.overlay = React.createRef();
+    this.clickAwayableElement = React.createRef();
+  }
+
+  UNSAFE_componentWillMount() {
     this.maybeSwiping = false;
     this.touchStartX = null;
     this.touchStartY = null;
@@ -120,7 +127,7 @@ class Drawer extends Component {
     this.enableSwipeHandling();
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // If controlled then the open prop takes precedence.
     if (nextProps.open !== null) {
       this.setState({
@@ -287,9 +294,9 @@ class Drawer extends Component {
 
   setPosition(translateX) {
     const rtlTranslateMultiplier = this.context.muiTheme.isRtl ? -1 : 1;
-    const drawer = ReactDOM.findDOMNode(this.refs.clickAwayableElement);
+    const drawer = ReactDOM.findDOMNode(this.clickAwayableElement.current);
     const transformCSS = `translate(${(this.getTranslateMultiplier() * rtlTranslateMultiplier * translateX)}px, 0)`;
-    this.refs.overlay.setOpacity(1 - translateX / this.getMaxTranslateX());
+    this.overlay.current.setOpacity(1 - translateX / this.getMaxTranslateX());
     autoPrefix.set(drawer.style, 'transform', transformCSS);
   }
 
@@ -389,7 +396,7 @@ class Drawer extends Component {
     if (!docked) {
       overlay = (
         <Overlay
-          ref="overlay"
+          ref={this.overlay}
           show={this.shouldShow()}
           className={overlayClassName}
           style={Object.assign(styles.overlay, overlayStyle)}
@@ -407,7 +414,7 @@ class Drawer extends Component {
         <EventListener target="window" onKeyUp={this.handleKeyUp} />
         {overlay}
         <Paper
-          ref="clickAwayableElement"
+          ref={this.clickAwayableElement}
           zDepth={zDepth}
           rounded={false}
           transitionEnabled={!this.state.swiping}

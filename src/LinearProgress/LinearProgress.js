@@ -104,16 +104,23 @@ class LinearProgress extends Component {
     muiTheme: PropTypes.object.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.bar1 = React.createRef();
+    this.bar2 = React.createRef();
+  }
+
   componentDidMount() {
     this.timers = {};
 
-    this.timers.bar1 = this.barUpdate('bar1', 0, this.refs.bar1, [
+    this.timers.bar1 = this.barUpdate('bar1', 0, this.bar1.current, [
       [-35, 100],
       [100, -90],
     ], 0);
 
     this.timers.bar2 = setTimeout(() => {
-      this.barUpdate('bar2', 0, this.refs.bar2, [
+      this.barUpdate('bar2', 0, this.bar2.current, [
         [-200, 100],
         [107, -8],
       ], 0);
@@ -161,8 +168,8 @@ class LinearProgress extends Component {
     return (
       <div {...other} style={prepareStyles(Object.assign(styles.root, style))}>
         <div style={prepareStyles(styles.bar)}>
-          <div ref="bar1" style={prepareStyles(styles.barFragment1)} />
-          <div ref="bar2" style={prepareStyles(styles.barFragment2)} />
+          <div ref={this.bar1} style={prepareStyles(styles.barFragment1)} />
+          <div ref={this.bar2} style={prepareStyles(styles.barFragment2)} />
         </div>
       </div>
     );

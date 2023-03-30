@@ -111,19 +111,27 @@ class EnhancedSwitch extends Component {
     isKeyboardFocused: false,
   };
 
-  componentWillMount() {
-    this.componentWillReceiveProps(this.props);
+  constructor(props) {
+    super(props);
+
+    this.root = React.createRef();
+    this.touchRipple = React.createRef();
+    this.checkbox = React.createRef();
+  }
+
+  UNSAFE_componentWillMount() {
+    this.UNSAFE_componentWillReceiveProps(this.props);
   }
 
   componentDidMount() {
-    const inputNode = this.refs.checkbox;
+    const inputNode = this.checkbox.current;
     if ((!this.props.switched || inputNode.checked !== this.props.switched) &&
       this.props.onParentShouldUpdate) {
       this.props.onParentShouldUpdate(inputNode.checked);
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const hasCheckedProp = nextProps.hasOwnProperty('checked');
     const hasNewDefaultProp =
       (nextProps.hasOwnProperty('defaultChecked') &&
@@ -143,7 +151,7 @@ class EnhancedSwitch extends Component {
   }
 
   isSwitched() {
-    return this.refs.checkbox.checked;
+    return this.checkbox.current.checked;
   }
 
   // no callback here because there is no event
@@ -152,14 +160,14 @@ class EnhancedSwitch extends Component {
       if (this.props.onParentShouldUpdate) {
         this.props.onParentShouldUpdate(newSwitchedValue);
       }
-      this.refs.checkbox.checked = newSwitchedValue;
+      this.checkbox.current.checked = newSwitchedValue;
     } else {
       warning(false, 'Material-UI: Cannot call set method while checked is defined as a property.');
     }
   }
 
   getValue() {
-    return this.refs.checkbox.value;
+    return this.checkbox.current.value;
   }
 
   handleChange = (event) => {
@@ -168,7 +176,7 @@ class EnhancedSwitch extends Component {
       isKeyboardFocused: false,
     });
 
-    const isInputChecked = this.refs.checkbox.checked;
+    const isInputChecked = this.checkbox.current.checked;
 
     if (!this.props.hasOwnProperty('checked') && this.props.onParentShouldUpdate) {
       this.props.onParentShouldUpdate(isInputChecked);
@@ -206,24 +214,24 @@ class EnhancedSwitch extends Component {
   handleMouseDown = (event) => {
     // only listen to left clicks
     if (event.button === 0) {
-      this.refs.touchRipple.start(event);
+      this.touchRipple.current.start(event);
     }
   };
 
   handleMouseUp = () => {
-    this.refs.touchRipple.end();
+    this.touchRipple.current.end();
   };
 
   handleMouseLeave = () => {
-    this.refs.touchRipple.end();
+    this.touchRipple.current.end();
   };
 
   handleTouchStart = (event) => {
-    this.refs.touchRipple.start(event);
+    this.touchRipple.current.start(event);
   };
 
   handleTouchEnd = () => {
-    this.refs.touchRipple.end();
+    this.touchRipple.current.end();
   };
 
   handleBlur = (event) => {
@@ -308,7 +316,7 @@ class EnhancedSwitch extends Component {
 
     const touchRipple = (
       <TouchRipple
-        ref="touchRipple"
+        ref={this.touchRipple}
         key="touchRipple"
         style={mergedRippleStyle}
         color={mergedRippleStyle.color}
@@ -343,7 +351,7 @@ class EnhancedSwitch extends Component {
     const inputElement = (
       <input
         {...other}
-        ref="checkbox"
+        ref={this.checkbox}
         type={inputType}
         style={prepareStyles(Object.assign(styles.input, inputStyle))}
         name={name}
@@ -384,7 +392,7 @@ class EnhancedSwitch extends Component {
     );
 
     return (
-      <div ref="root" className={className} style={prepareStyles(Object.assign(styles.root, style))}>
+      <div ref={this.root} className={className} style={prepareStyles(Object.assign(styles.root, style))}>
         <EventListener
           target="window"
           onKeyDown={this.handleKeyDown}

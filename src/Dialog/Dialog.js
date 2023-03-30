@@ -149,6 +149,13 @@ function getStyles(props, context) {
 }
 
 class DialogInline extends Component {
+  constructor(props) {
+    super(props);
+
+    this.dialogWindow = React.createRef();
+    this.dialogContent = React.createRef();
+  }
+
   static propTypes = {
     actions: PropTypes.node,
     actionsContainerClassName: PropTypes.string,
@@ -204,8 +211,8 @@ class DialogInline extends Component {
 
     const clientHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     const container = ReactDOM.findDOMNode(this);
-    const dialogWindow = ReactDOM.findDOMNode(this.refs.dialogWindow);
-    const dialogContent = ReactDOM.findDOMNode(this.refs.dialogContent);
+    const dialogWindow = ReactDOM.findDOMNode(this.dialogWindow.current);
+    const dialogContent = ReactDOM.findDOMNode(this.dialogContent.current);
     const minPaddingTop = 16;
 
     // Reset the height in case the window was resized.
@@ -329,7 +336,7 @@ class DialogInline extends Component {
         }
         <ReactTransitionGroup
           component="div"
-          ref="dialogWindow"
+          ref={this.dialogWindow}
           transitionAppear={true}
           transitionAppearTimeout={450}
           transitionEnter={true}
@@ -343,7 +350,7 @@ class DialogInline extends Component {
               <Paper className={paperClassName} zDepth={4} {...paperProps}>
                 {titleElement}
                 <div
-                  ref="dialogContent"
+                  ref={this.dialogContent}
                   className={bodyClassName}
                   style={prepareStyles(styles.body)}
                 >

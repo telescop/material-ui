@@ -127,7 +127,13 @@ class Checkbox extends Component {
     switched: false,
   };
 
-  componentWillMount() {
+  constructor(props) {
+    super(props);
+
+    this.enhancedSwitch = React.createRef();
+  }
+
+  UNSAFE_componentWillMount() {
     const {checked, defaultChecked, valueLink} = this.props;
 
     if (checked || defaultChecked || (valueLink && valueLink.value)) {
@@ -137,7 +143,7 @@ class Checkbox extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.checked !== nextProps.checked) {
       this.setState({
         switched: nextProps.checked,
@@ -146,11 +152,11 @@ class Checkbox extends Component {
   }
 
   isChecked() {
-    return this.refs.enhancedSwitch.isSwitched();
+    return this.enhancedSwitch.current.isSwitched();
   }
 
   setChecked(newCheckedValue) {
-    this.refs.enhancedSwitch.setSwitched(newCheckedValue);
+    this.enhancedSwitch.current.setSwitched(newCheckedValue);
   }
 
   handleStateChange = (newSwitched) => {
@@ -215,7 +221,7 @@ class Checkbox extends Component {
     );
 
     const enhancedSwitchProps = {
-      ref: 'enhancedSwitch',
+      ref: this.enhancedSwitch,
       inputType: 'checkbox',
       switched: this.state.switched,
       switchElement: checkboxElement,
